@@ -1,0 +1,12 @@
+{
+  "name": "export_form",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "pdf": "electron-pdf src/index.html dist/index.pdf -m 1"
+  },
+  "dependencies": {
+    "electron-pdf": "^1.3.0"
+  }
+}
