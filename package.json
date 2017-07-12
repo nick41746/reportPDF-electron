@@ -4,9 +4,20 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "pdf": "electron-pdf src/index.html out.pdf -m 1"
+    "pdf": "electron-pdf src/test.html out.pdf -m 1",
+    "prince": "prince src/index.html index.pdf",
+    "wkhtml": "wkhtmltopdf",
+    "jsreport": "node src/index.js"
   },
   "dependencies": {
-    "electron-pdf": "^1.3.0"
+    "electron-pdf": "^1.3.0",
+    "express": "^4.15.3",
+    "jsreport": "^1.7.0",
+    "jsreport-core": "^1.3.2",
+    "jsreport-electron-pdf": "^2.7.1",
+    "jsreport-jsrender": "^1.0.2",
+    "node-wkhtmltopdf": "^2.0.0",
+    "prince": "^1.4.0",
+    "wkhtmltopdf": "^0.3.4"
   }
 }
