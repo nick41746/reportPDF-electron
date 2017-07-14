@@ -8,10 +8,14 @@ var jsreport = require('jsreport-core')({
 var express = require('express')
 var bodyParser = require('body-parser')
 var request = require('request')
+var cors = require('cors')
 var app = express()
 const mysql = require('mysql');
+var urlencoded = require('urlencode')
 app.set('port', (process.env.PORT || 4000))
-
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json())
+app.use(cors())
 const con = mysql.createConnection({
   host: 'localhost',
   user: 'root',
@@ -27,12 +31,15 @@ con.connect((err) => {
   console.log('Connection established');
 });
 
-app.get('/bot', (req, res) => {
+app.post('/bot', (req, res, next) => {
   //cvar fetchData = QueryData()
+  console.log('hit')
+  console.log('req', req.body)
   var query = new Promise((resolve, reject) => {
       resolve(QueryData())
   })
   query.then( value => {
+    console.log('value', value[0].id)
     sendText(res,value)
   })
   
@@ -42,8 +49,9 @@ app.get('/bot', (req, res) => {
 var fs = require('fs')
 function sendText (res,value) {
   jsreport.init().then(function () {
-    var buff = fs.readFileSync('index.html', 'utf8')
-    var style = fs.readFileSync('style.css', 'utf8')
+    var buff = fs.readFileSync('src/index.html', 'utf8')
+    var style = fs.readFileSync('src/style.css', 'utf8')
+    var logoimg = "{#asset src/ittp.png @encoding=dataURI}"
     return jsreport.render({
       template: {
         content: buff,
@@ -56,13 +64,15 @@ function sendText (res,value) {
       },
       data: {
         test: style,
-        loanData: value
+        logo: logoimg,
+        loanData: value[0].loan_id
       }
     }).then(function(resp) {
       //prints pdf with headline Hello world
       // console.log(resp.content.toString())
       fs.writeFileSync('jsreport-test.pdf', resp.content)
       res.download('jsreport-test.pdf')
+      //res.sendStatus(200)
       console.log("success")
     });
   }).catch(function(e) {
