@@ -9,20 +9,41 @@ var express = require('express')
 var bodyParser = require('body-parser')
 var request = require('request')
 var app = express()
+const mysql = require('mysql');
 app.set('port', (process.env.PORT || 4000))
-//jsreport.use(require('jsreport-electron-pdf')({
-  // strategy: 'electron-ipc',
-//}))
-//jsreport.use(require('jsreport-jsrender')())
+
+const con = mysql.createConnection({
+  host: 'localhost',
+  user: 'root',
+  password: '1234',
+  database: 'ittpdev'
+});
+
+con.connect((err) => {
+  if(err){
+    console.log('Error connecting to Db');
+    return;
+  }
+  console.log('Connection established');
+});
+
 app.get('/bot', (req, res) => {
-  sendText(res)
+  //cvar fetchData = QueryData()
+  var query = new Promise((resolve, reject) => {
+      resolve(QueryData())
+  })
+  query.then( value => {
+    sendText(res,value)
+  })
+  
+  // sendText(res)
 })
 
 var fs = require('fs')
-function sendText (res) {
+function sendText (res,value) {
   jsreport.init().then(function () {
-    var buff = fs.readFileSync('src/index.html', 'utf8')
-    var style = fs.readFileSync('src/style.css', 'utf8')
+    var buff = fs.readFileSync('index.html', 'utf8')
+    var style = fs.readFileSync('style.css', 'utf8')
     return jsreport.render({
       template: {
         content: buff,
@@ -34,7 +55,8 @@ function sendText (res) {
         },
       },
       data: {
-        test: style
+        test: style,
+        loanData: value
       }
     }).then(function(resp) {
       //prints pdf with headline Hello world
@@ -48,6 +70,22 @@ function sendText (res) {
   })
 }
 
+function QueryData() {
+  var i = 0
+  var resultData = {}
+  return new Promise(function(resolve, reject){
+    con.query('SELECT * FROM Transaction',
+    function(err, results, fields) {
+      resultData = results
+      if(err)
+        { console.log('Error while perfoming Query', err) }
+      con.end()
+      resultData = results
+      // console.log('resultData', resultData)
+      resolve(resultData)
+    })
+  })
+}
 app.listen(app.get('port'), function () {
   console.log('run at port', app.get('port'))
 })
