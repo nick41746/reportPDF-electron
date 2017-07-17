@@ -31,62 +31,7 @@ sequelize
     console.error('Unable to connect to the database:', err);
   });
 
-var test = QueryData()
-console.log('test',test)
-app.set('port', (process.env.PORT || 4000))
-
-app.get('/temp-receipt', (req, res) => {
-  var result = QueryData()
-  console.log('data', result)
-  sendText(res,result)
-})
-
-var fs = require('fs')
-function sendText(res,result) {
-  console.log(result)
-  jsreport.init().then(function () {
-    var buff = fs.readFileSync('src/index.html', 'utf8')
-    var style = fs.readFileSync('src/style.css', 'utf8')
-    var logoimg = "{#asset src/ittp.png @encoding=dataURI}"
-    return jsreport.render({
-      template: {
-        content: buff,
-        engine: 'jsrender',
-        recipe: 'electron-pdf',
-        electron: {
-          marginsType: 1,
-          format: 'A4',
-        },
-      },
-      data: {
-        test: style,
-        logo: logoimg,
-        dataTransaction: result
-      }
-    }).then(function(resp) {
-      //prints pdf with headline Hello world
-      // console.log(resp.content.toString())
-      fs.writeFileSync('jsreport-test.pdf', resp.content)
-      res.sendFile('jsreport-test.pdf' , { root : __dirname});
-      console.log("success")
-    });
-  }).catch(function(e) {
-    console.log(e)
-  })
-}
-
-
-function QueryData(){
-var resultTransaction = {}
-var resultLoan = {}
-var result = {}
-var i = 0
 const Transaction = sequelize.define('Transaction',{
-  // id : {
-  //   type : Sequelize.INTEGER,
-  //   primaryKey : true,
-  //   autoIncrement : true
-  // },
   cash_in: {
     type : Sequelize.INTEGER,
   },
@@ -110,22 +55,59 @@ const Loan = sequelize.define('Loan',{
   tableName: 'Loan',
 })
 
-Transaction.findOne({where: {loan_id: 5910030559}
-}).then(transactions => {
-  resultTransaction = transactions.dataValues
-  console.log('resultTransaction', resultTransaction)
+app.set('port', (process.env.PORT || 4000))
+
+app.get('/temp-receipt', (req, res) => {
+  var resultTransaction = {}
+  var resultLoan = {}
+  var result = {}
+  Transaction.findOne({where: {loan_id: 5910030559}
+  }).then(transactions => {
+    resultTransaction = transactions.dataValues
+    console.log('resultTransaction', resultTransaction)
+  })
+  Loan.findOne({where: {loan_id: 5910030559}
+  }).then(loans => {
+    resultLoan = loans.dataValues
+    console.log('resultLoan', resultLoan)
+  }).then( next => {
+    result = Object.assign({}, resultTransaction, resultLoan)
+    console.log('result', result)
+  }).then(next => sendText(res,result))
 })
 
-Loan.findOne({where: {loan_id: 5910030559}
-}).then(loans => {
-  resultLoan = loans.dataValues
-  console.log('resultLoan', resultLoan)
-}).then( next => {
-  result = Object.assign({}, resultTransaction, resultLoan)
-  console.log('result', result)
-}).then( next => {
-  return result
-})
+var fs = require('fs')
+function sendText(res,result) {
+  console.log(result)
+  jsreport.init().then(function () {
+    var buff = fs.readFileSync('src/index.html', 'utf8')
+    var style = fs.readFileSync('src/style.css', 'utf8')
+    var logoimg = "{#asset src/ittp.png @encoding=dataURI}"
+    return jsreport.render({
+      template: {
+        content: buff,
+        engine: 'jsrender',
+        recipe: 'electron-pdf',
+        electron: {
+          marginsType: 1,
+          format: 'A4',
+        },
+      },
+      data: {
+        test: style,
+        logo: logoimg,
+        //dataTransaction: result
+      }
+    }).then(function(resp) {
+      //prints pdf with headline Hello world
+      // console.log(resp.content.toString())
+      fs.writeFileSync('jsreport-test.pdf', resp.content)
+      res.sendFile('jsreport-test.pdf' , { root : __dirname});
+      console.log("success")
+    });
+  }).catch(function(e) {
+    console.log(e)
+  })
 }
 
 app.listen(app.get('port'), function () {
