@@ -11,6 +11,8 @@ var bodyParser = require('body-parser')
 var request = require('request')
 var app = express()
 var Sequelize = require('sequelize')
+var moment = require('moment')
+moment.locale('th')
 
 const sequelize = new Sequelize('ittpdev', 'root', '1234', {
   host: 'localhost',
@@ -33,10 +35,25 @@ sequelize
 
 const Transaction = sequelize.define('Transaction',{
   cash_in: {
-    type : Sequelize.INTEGER,
+    type: Sequelize.INTEGER,
   },
   loan_id: {
-    type : Sequelize.STRING,
+    type: Sequelize.STRING,
+  },
+  cfPrincipal: {
+    type: Sequelize.INTEGER
+  },
+  cfInterest: {
+    type: Sequelize.INTEGER
+  },
+  min_due: {
+    type: Sequelize.INTEGER
+  },
+  cfFee: {
+    type: Sequelize.INTEGER
+  },
+  trans_date: {
+    type: Sequelize.DATE
   }
   },{
   timestamps: false,
@@ -49,36 +66,70 @@ const Loan = sequelize.define('Loan',{
   },
   firstname: {
     type : Sequelize.STRING
+  },
+  lastname: {
+    type : Sequelize.STRING
+  },
+  citizen_id: {
+    type: Sequelize.STRING
   }
   },{
   timestamps: false,
   tableName: 'Loan',
 })
 
+const Applications = sequelize.define('Applications',{
+  citizenId: {
+    type: Sequelize.STRING
+  },
+  title: {
+    type : Sequelize.STRING,
+  }
+  },{
+  timestamps: false,
+  tableName: 'Applications',
+})
+
 app.set('port', (process.env.PORT || 4000))
 
 app.get('/temp-receipt', (req, res) => {
+  console.log('query', req.query)
   var resultTransaction = {}
   var resultLoan = {}
+  var resultApplication = {}
   var result = {}
-  Transaction.findOne({where: {loan_id: 5910030559}
-  }).then(transactions => {
-    resultTransaction = transactions.dataValues
-    console.log('resultTransaction', resultTransaction)
-  })
-  Loan.findOne({where: {loan_id: 5910030559}
-  }).then(loans => {
-    resultLoan = loans.dataValues
-    console.log('resultLoan', resultLoan)
-  }).then( next => {
-    result = Object.assign({}, resultTransaction, resultLoan)
-    console.log('result', result)
-  }).then(next => sendText(res,result))
+  Transaction.findOne({where: {id: req.query.id }})
+    .then(transactions => {
+      resultTransaction = transactions.dataValues
+      console.log('resultTransaction', resultTransaction)
+    })
+    .then(() => {
+      return Loan.findOne({where: {loan_id: resultTransaction.loan_id}})
+    })
+    .then(loans => {
+      console.log('loans',loans)
+      resultLoan = loans.dataValues
+      console.log('resultLoan', resultLoan)
+    })
+    .then(() => {
+      return Applications.findOne({where: {citizenId: resultLoan.citizen_id}})
+    })
+    .then(applicatons => {
+      console.log('applicatons',applicatons)
+      resultApplication = applicatons.dataValues
+      console.log('resultLoan', resultApplication)
+    })
+    .then( () => {
+      result = Object.assign({}, resultTransaction, resultLoan, resultApplication)
+      console.log('result', result)
+    })
+    .then(() => sendText(res,result))
 })
 
 var fs = require('fs')
 function sendText(res,result) {
-  console.log(result)
+  result.trans_date = moment(result.trans_date).add(543, 'years')
+  result.trans_date = moment(result.trans_date).format("DD/MM/YYYY")
   jsreport.init().then(function () {
     var buff = fs.readFileSync('src/index.html', 'utf8')
     var style = fs.readFileSync('src/style.css', 'utf8')
@@ -96,7 +147,15 @@ function sendText(res,result) {
       data: {
         test: style,
         logo: logoimg,
-        //dataTransaction: result
+        loanId: result.loan_id,
+        firstName: result.firstname,
+        lastName: result.lastname,
+        cfPrincipal: result.cfPrincipal/10000,
+        cfInterest: result.cfInterest/10000,
+        minDue: result.min_due/10000,
+        cfFee: result.cfFee/10000,
+        transDate: result.trans_date,
+        title: result.title
       }
     }).then(function(resp) {
       //prints pdf with headline Hello world

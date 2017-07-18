@@ -38,14 +38,14 @@
                         <tr height="23%">
                           <td width="16%" center="true" my-border="1">เลขที่สัญญา</td>
                           <td style="padding-left: 10px" my-border="1">
-                            <div style="display: inline-block; width: 45%;"></div>
+                            <div style="display: inline-block; width: 45%;">{{:loanId}}</div>
                             <div style="display: inline-block">ประเภท</div>
                           </td>
                         </tr>
                         <tr>
                           <td center="true" my-border="1">ลูกค้า</td>
                           <td colspan=2 my-border="1" style="padding-left: 6px">
-                            นาย ชยพล ชิมังค์<br>
+                            {{:title}} {{:firstName}} {{:lastName}}<br>
                             บริษัท ยูนิลีเวอร์ไทยโฮลดิ้งส์ จำกัด 64 อาคาร PCL MIXING หมู่ 4
                             ซ.ฉลองกรุง 31 ถ.ฉลองกรุง แขวงลำปลาทิว เขตลาดกระบัง กรุงเทพมหานคร 10520
                           </td>
@@ -64,7 +64,7 @@
                         </tr>
                         <tr>
                           <td>วันที่</td>
-                          <td>21/4/2560</td>
+                          <td>{{:transDate}}</td>
                         </tr>
                         <tr>
                           <td>เลขที่ใบเสร็จรับเงิน</td>
@@ -88,16 +88,16 @@
                   </tr>
                   <tr style="height: 35px" inside-border="1">
                     <td>รับชำระ</td>
-                    <td align-right="true">1,489.70</td>
-                    <td align-right="true">510.30</td>
-                    <td align-right="true">.00</td>
-                    <td align-right="true">2,000.00</td>
+                    <td align-right="true">{{:cfPrincipal}}</td>
+                    <td align-right="true">{{:cfPrincipal}}</td>
+                    <td align-right="true">{{:cfFee}}</td>
+                    <td align-right="true">{{:minDue}}</td>
                   </tr>
                   <tr>
                     <td align-left="true">จำนวนเงินที่ชำระเป็นตัวอักษร</td>
                     <td align-left="true" colspan=2>สองพันบาทถ้วน</td>
                     <td align-right="true">ยอดเงินชำระสุทธิ</td>
-                    <td align-right="true">2,000.00</td>
+                    <td align-right="true">{{:minDue}}</td>
                   </tr>
                 </table>
               </td>
@@ -179,14 +179,14 @@
                         <tr height="23%">
                           <td width="16%" center="true" my-border="1">เลขที่สัญญา</td>
                           <td style="padding-left: 10px" my-border="1">
-                            <div style="display: inline-block; width: 45%;">59-10-03-0551</div>
+                            <div style="display: inline-block; width: 45%;">{{:loanId}}</div>
                             <div style="display: inline-block">ประเภท</div>
                           </td>
                         </tr>
                         <tr>
                           <td center="true" my-border="1">ลูกค้า</td>
                           <td colspan=2 my-border="1" style="padding-left: 6px">
-                            นาย ชยพล ชิมังค์<br>
+                            {{:title}} {{:firstName}} {{:lastName}}<br>
                             บริษัท ยูนิลีเวอร์ไทยโฮลดิ้งส์ จำกัด 64 อาคาร PCL MIXING หมู่ 4
                             ซ.ฉลองกรุง 31 ถ.ฉลองกรุง แขวงลำปลาทิว เขตลาดกระบัง กรุงเทพมหานคร 10520
                           </td>
@@ -205,7 +205,7 @@
                         </tr>
                         <tr>
                           <td>วันที่</td>
-                          <td>21/4/2560</td>
+                          <td>{{:transDate}}</td>
                         </tr>
                         <tr>
                           <td>เลขที่ใบเสร็จรับเงิน</td>
@@ -229,16 +229,16 @@
                   </tr>
                   <tr style="height: 35px" inside-border="1">
                     <td>รับชำระ</td>
-                    <td align-right="true">1,489.70</td>
-                    <td align-right="true">510.30</td>
-                    <td align-right="true">.00</td>
-                    <td align-right="true">2,000.00</td>
+                    <td align-right="true">{{:cfPrincipal}}</td>
+                    <td align-right="true">{{:cfPrincipal}}</td>
+                    <td align-right="true">{{:cfFee}}</td>
+                    <td align-right="true">{{:minDue}}</td>
                   </tr>
                   <tr>
                     <td align-left="true">จำนวนเงินที่ชำระเป็นตัวอักษร</td>
                     <td align-left="true" colspan=2>สองพันบาทถ้วน</td>
                     <td align-right="true">ยอดเงินชำระสุทธิ</td>
-                    <td align-right="true">2,000.00</td>
+                    <td align-right="true">{{:minDue}}</td>
                   </tr>
                 </table>
               </td>

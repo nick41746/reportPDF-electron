@@ -82,16 +82,26 @@ var resultLoan = {}
 var result = {}
 var i = 0
 const Transaction = sequelize.define('Transaction',{
-  // id : {
-  //   type : Sequelize.INTEGER,
-  //   primaryKey : true,
-  //   autoIncrement : true
-  // },
   cash_in: {
-    type : Sequelize.INTEGER,
+    type: Sequelize.INTEGER,
   },
   loan_id: {
-    type : Sequelize.STRING,
+    type: Sequelize.STRING,
+  },
+  cfPrincipal: {
+    type: Sequelize.INTEGER
+  },
+  cfInterest: {
+    type: Sequelize.INTEGER
+  },
+  min_due: {
+    type: Sequelize.INTEGER
+  },
+  cfFee: {
+    type: Sequelize.INTEGER
+  },
+  trans_date: {
+    type: Sequelize.DATE
   }
   },{
   timestamps: false,
@@ -103,6 +113,9 @@ const Loan = sequelize.define('Loan',{
     type : Sequelize.STRING,
   },
   firstname: {
+    type : Sequelize.STRING
+  },
+  lastname: {
     type : Sequelize.STRING
   }
   },{
