@@ -141,7 +141,6 @@ function sendText(res,result) {
         recipe: 'electron-pdf',
         electron: {
           marginsType: 1,
-          format: 'A4',
         },
       },
       data: {

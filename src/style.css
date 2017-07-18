@@ -11,7 +11,7 @@ page[size="A4"] {
   margin: 0 auto;
   margin-bottom: 0.5cm;
   box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);
-  page-break-before: always; 
+  page-break-before: always;
 }
 
 @media print {
@@ -76,5 +76,5 @@ td[align-left="true"] {
   border: 1px solid #000;
   height: 100%;
   width: 96%;
-  margin:auto; 
+  margin:auto;
 }
