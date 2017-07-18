@@ -40,16 +40,16 @@ const Transaction = sequelize.define('Transaction',{
   loan_id: {
     type: Sequelize.STRING,
   },
-  cfPrincipal: {
+  cf_principal: {
     type: Sequelize.INTEGER
   },
-  cfInterest: {
+  cf_interest: {
     type: Sequelize.INTEGER
   },
   min_due: {
     type: Sequelize.INTEGER
   },
-  cfFee: {
+  cf_fee: {
     type: Sequelize.INTEGER
   },
   trans_date: {
@@ -141,6 +141,7 @@ function sendText(res,result) {
         recipe: 'electron-pdf',
         electron: {
           marginsType: 1,
+          format: 'A4',
         },
       },
       data: {
@@ -149,10 +150,10 @@ function sendText(res,result) {
         loanId: result.loan_id,
         firstName: result.firstname,
         lastName: result.lastname,
-        cfPrincipal: result.cfPrincipal/10000,
-        cfInterest: result.cfInterest/10000,
+        cfPrincipal: result.cf_principal/10000,
+        cfInterest: result.cf_interest/10000,
         minDue: result.min_due/10000,
-        cfFee: result.cfFee/10000,
+        cfFee: result.cf_fee/10000,
         transDate: result.trans_date,
         title: result.title
       }
